@@ -93,8 +93,12 @@
         if (current_active_button) {
             clearTimeout(deactivation_timeout);
             deactivate_current_button();
-        }
-        activate_button(color, tone_frequency);
+            setTimeout(function() { 
+                activate_button(color, tone_frequency);
+            }, 100);
+        } else {
+            activate_button(color, tone_frequency);
+        };
     };
     
     function green_button_press() {
