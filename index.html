@@ -90,22 +90,11 @@
     };
 
     function handle_button_press(color, tone_frequency) {
-        if (!current_active_button) {
-            current_active_button = color;
-            
-            make_sound(tone_frequency, BUTTON_DURATION_IN_SECONDS);
-            
-            let element = get_button_element_by_color(color);
-            let old_class = element.className;
-            element.className = color.concat("_button_pressed");
-            
-            deactivation_timeout = setTimeout(function() {
-                deactivate_current_button();
-            }, BUTTON_DURATION_IN_SECONDS * 1000);
-        } else {
+        if (current_active_button) {
             clearTimeout(deactivation_timeout);
             deactivate_current_button();
-        };
+        }
+        activate_button(color, tone_frequency);
     };
     
     function green_button_press() {
