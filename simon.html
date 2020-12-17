@@ -1,0 +1,105 @@
+<html>
+<head>
+    <title>Simon</title>
+    <style>
+        .button {
+        }
+        .red_button {
+            background-color: #FF0000;
+        }
+        .blue_button {
+            background-color: #0000FF;
+        }
+        .green_button {
+            background-color: #00FF00;
+        }
+        .yellow_button {
+            background-color: #FFFF00;
+        }
+
+        .red_button_pressed {
+            background-color: #750000;
+        }
+        .blue_button_pressed {
+            background-color: #000075;
+        }
+        .green_button_pressed {
+            background-color: #007500;
+        }
+        .yellow_button_pressed {
+            background-color: #757500;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="simon">
+        <button id="green_button" class="green_button" onclick="green_button_press();">Green</button>
+        <button id="red_button" class="red_button" onclick="red_button_press();">Red</button>
+        <br>
+        <button id="blue_button" class="blue_button" onclick="blue_button_press();">Blue</button>
+        <button id="yellow_button" class="yellow_button" onclick="yellow_button_press();">Yellow</button>
+    </div>
+
+</body>
+
+<script>
+    const BUTTON_DURATION_IN_SECONDS = 1;
+    let BUTTON_LOCK = false;
+    
+    function make_sound(frequency, duration_in_seconds) {
+        let context = new AudioContext();
+        let o = context.createOscillator();
+        o.type = "sine";
+        o.connect(context.destination);
+        o.frequency.value = frequency;
+        o.start();
+        o.stop(context.currentTime + duration_in_seconds);
+    };
+    
+    function swap_class_for_duration(id, new_class, duration_in_seconds) {
+        let element = document.getElementById(id);
+        let old_class = element.className;
+        element.className = new_class;
+        setTimeout(function() {
+            element.className = old_class;
+        }, duration_in_seconds * 1000);
+
+    };
+    
+    function handle_button_press(color, tone_frequency) {
+        if (!BUTTON_LOCK) {
+            BUTTON_LOCK = true;
+            
+            make_sound(tone_frequency, BUTTON_DURATION_IN_SECONDS);
+            
+            swap_class_for_duration(color.concat("_button"), 
+                                    color.concat("_button_pressed"), 
+                                    BUTTON_DURATION_IN_SECONDS);
+            
+            setTimeout(function() {
+                BUTTON_LOCK = false;
+            }, BUTTON_DURATION_IN_SECONDS * 1000);
+        };
+    };
+    
+    function green_button_press() {
+        handle_button_press("green", 200);
+    };
+
+    function red_button_press() {
+        handle_button_press("red", 500);
+    };
+
+    function blue_button_press() {
+        handle_button_press("blue", 800);
+    };
+
+    function yellow_button_press() {
+        handle_button_press("yellow", 1100);
+    };
+    
+</script>
+
+</html>
