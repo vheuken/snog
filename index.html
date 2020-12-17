@@ -46,41 +46,65 @@
 
 <script>
     const BUTTON_DURATION_IN_SECONDS = 1;
-    let BUTTON_LOCK = false;
+    let current_active_button = "";
+    let deactivation_timeout = null;
+    const AUDIO_CONTEXT = new AudioContext;
+    let oscillator = null;
     
     function make_sound(frequency, duration_in_seconds) {
-        let context = new AudioContext();
-        let o = context.createOscillator();
-        o.type = "sine";
-        o.connect(context.destination);
-        o.frequency.value = frequency;
-        o.start();
-        o.stop(context.currentTime + duration_in_seconds);
+        oscillator = AUDIO_CONTEXT.createOscillator();
+        oscillator.type = "sine";
+        oscillator.connect(AUDIO_CONTEXT.destination);
+        oscillator.frequency.value = frequency;
+        oscillator.start();
     };
     
-    function swap_class_for_duration(id, new_class, duration_in_seconds) {
-        let element = document.getElementById(id);
-        let old_class = element.className;
-        element.className = new_class;
-        setTimeout(function() {
-            element.className = old_class;
-        }, duration_in_seconds * 1000);
+    function get_button_element_by_color(color) {
+        return document.getElementById(color.concat("_button"));
+    };
+    
+    function deactivate_current_button() {
+        let color = current_active_button;
+        
+        let element = get_button_element_by_color(color);
+        
+        element.className = color.concat("_button");
+        
+        oscillator.stop();
+        
+        current_active_button = "";
+    };
 
+    function activate_button(color, tone_frequency) {
+        current_active_button = color;
+        
+        make_sound(tone_frequency, BUTTON_DURATION_IN_SECONDS);
+        
+        let element = get_button_element_by_color(color);
+        let old_class = element.className;
+        element.className = color.concat("_button_pressed");
+        
+        deactivation_timeout = setTimeout(function() {
+            deactivate_current_button();
+        }, BUTTON_DURATION_IN_SECONDS * 1000);
     };
-    
+
     function handle_button_press(color, tone_frequency) {
-        if (!BUTTON_LOCK) {
-            BUTTON_LOCK = true;
+        if (!current_active_button) {
+            current_active_button = color;
             
             make_sound(tone_frequency, BUTTON_DURATION_IN_SECONDS);
             
-            swap_class_for_duration(color.concat("_button"), 
-                                    color.concat("_button_pressed"), 
-                                    BUTTON_DURATION_IN_SECONDS);
+            let element = get_button_element_by_color(color);
+            let old_class = element.className;
+            element.className = color.concat("_button_pressed");
             
-            setTimeout(function() {
-                BUTTON_LOCK = false;
+            deactivation_timeout = setTimeout(function() {
+                deactivate_current_button();
             }, BUTTON_DURATION_IN_SECONDS * 1000);
+        } else {
+            clearTimeout(deactivation_timeout);
+            deactivate_current_button();
         };
     };
     
