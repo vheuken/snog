@@ -1,6 +1,7 @@
 <html>
 <head>
     <title>Simon</title>
+    <meta charset="UTF-8">
     <style>
         .button {
         }
@@ -50,7 +51,7 @@
     let deactivation_timeout = null;
     const AUDIO_CONTEXT = new AudioContext;
     let oscillator = null;
-    
+
     function make_sound(frequency, duration_in_seconds) {
         oscillator = AUDIO_CONTEXT.createOscillator();
         oscillator.type = "sine";
