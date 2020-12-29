@@ -98,7 +98,7 @@
             deactivate_current_button();
             setTimeout(function() { 
                 activate_button(color, tone_frequency);
-            }, 50);
+            }, 25);
         } else {
             activate_button(color, tone_frequency);
         };
@@ -125,42 +125,45 @@
         let gamepad = event.gamepad;
         gamepads[gamepad.index] = gamepad;
         
-        setInterval(function() {
-            if (gamepad.buttons[0].pressed && !gamepad_buttons[0]) {
-                gamepad_buttons[0] = true;
-                blue_button_press();
-            }
-            else if (gamepad.buttons[1].pressed && !gamepad_buttons[1]) {
-                gamepad_buttons[1] = true;
-                yellow_button_press();
-            }
-            else if (gamepad.buttons[2].pressed && !gamepad_buttons[2]) {
-                gamepad_buttons[2] = true;
-                green_button_press();
-            }
-            else if (gamepad.buttons[3].pressed && !gamepad_buttons[3]) {
-                gamepad_buttons[3] = true;
-                red_button_press();
-            }
-            
-            if (!gamepad.buttons[0].pressed && gamepad_buttons[0]) {
-                gamepad_buttons[0] = false;
-            }
-            if (!gamepad.buttons[1].pressed && gamepad_buttons[1]) {
-                gamepad_buttons[1] = false;
-            }
-            if (!gamepad.buttons[2].pressed && gamepad_buttons[2]) {
-                gamepad_buttons[2] = false;
-            }
-            if (!gamepad.buttons[3].pressed && gamepad_buttons[3]) {
-                gamepad_buttons[3] = false;
-            }            
-        }, 100);
+        gamepads[gamepad.index].polling_function = 
+            setInterval(function() {
+                if (gamepad.buttons[0].pressed && !gamepad_buttons[0]) {
+                    gamepad_buttons[0] = true;
+                    blue_button_press();
+                }
+                else if (gamepad.buttons[1].pressed && !gamepad_buttons[1]) {
+                    gamepad_buttons[1] = true;
+                    yellow_button_press();
+                }
+                else if (gamepad.buttons[2].pressed && !gamepad_buttons[2]) {
+                    gamepad_buttons[2] = true;
+                    green_button_press();
+                }
+                else if (gamepad.buttons[3].pressed && !gamepad_buttons[3]) {
+                    gamepad_buttons[3] = true;
+                    red_button_press();
+                }
+                
+                if (!gamepad.buttons[0].pressed && gamepad_buttons[0]) {
+                    gamepad_buttons[0] = false;
+                }
+                if (!gamepad.buttons[1].pressed && gamepad_buttons[1]) {
+                    gamepad_buttons[1] = false;
+                }
+                if (!gamepad.buttons[2].pressed && gamepad_buttons[2]) {
+                    gamepad_buttons[2] = false;
+                }
+                if (!gamepad.buttons[3].pressed && gamepad_buttons[3]) {
+                    gamepad_buttons[3] = false;
+                }            
+            }, 50);
     });
     
     window.addEventListener("gamepaddisconnected", function(event) {
         console.log("Gamepad disconnected");
-        delete gamepads[event.gamepad.index];
+        let gamepad = event.gamepad;
+        clearInterval(gamepads[gamepad.index].polling_function);
+        delete gamepads[gamepad.index];
     });       
 </script>
 
