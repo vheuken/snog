@@ -127,33 +127,42 @@
         
         gamepads[gamepad.index].polling_function = 
             setInterval(function() {
+                gamepad = navigator.getGamepads()[gamepad.index];
                 if (gamepad.buttons[0].pressed && !gamepad_buttons[0]) {
+                    console.log("Button 0 pressed!");
                     gamepad_buttons[0] = true;
                     blue_button_press();
                 }
                 else if (gamepad.buttons[1].pressed && !gamepad_buttons[1]) {
+                    console.log("Button 1 pressed!");
                     gamepad_buttons[1] = true;
                     yellow_button_press();
                 }
                 else if (gamepad.buttons[2].pressed && !gamepad_buttons[2]) {
+                    console.log("Button 2 pressed!");
                     gamepad_buttons[2] = true;
                     green_button_press();
                 }
                 else if (gamepad.buttons[3].pressed && !gamepad_buttons[3]) {
+                    console.log("Button 3 pressed!");
                     gamepad_buttons[3] = true;
                     red_button_press();
-                }
+                };
                 
                 if (!gamepad.buttons[0].pressed && gamepad_buttons[0]) {
+                    console.log("Button 0 released!");
                     gamepad_buttons[0] = false;
                 }
                 if (!gamepad.buttons[1].pressed && gamepad_buttons[1]) {
+                    console.log("Button 1 released!");
                     gamepad_buttons[1] = false;
                 }
                 if (!gamepad.buttons[2].pressed && gamepad_buttons[2]) {
+                    console.log("Button 2 released!");
                     gamepad_buttons[2] = false;
                 }
                 if (!gamepad.buttons[3].pressed && gamepad_buttons[3]) {
+                    console.log("Button 3 released!");
                     gamepad_buttons[3] = false;
                 }            
             }, 50);
