@@ -98,7 +98,7 @@
             deactivate_current_button();
             setTimeout(function() { 
                 activate_button(color, tone_frequency);
-            }, 100);
+            }, 10);
         } else {
             activate_button(color, tone_frequency);
         };
@@ -130,15 +130,15 @@
                 gamepad_buttons[0] = true;
                 blue_button_press();
             }
-            if (gamepad.buttons[1].pressed && !gamepad_buttons[1]) {
+            else if (gamepad.buttons[1].pressed && !gamepad_buttons[1]) {
                 gamepad_buttons[1] = true;
                 yellow_button_press();
             }
-            if (gamepad.buttons[2].pressed && !gamepad_buttons[2]) {
+            else if (gamepad.buttons[2].pressed && !gamepad_buttons[2]) {
                 gamepad_buttons[2] = true;
                 green_button_press();
             }
-            if (gamepad.buttons[3].pressed && !gamepad_buttons[3]) {
+            else if (gamepad.buttons[3].pressed && !gamepad_buttons[3]) {
                 gamepad_buttons[3] = true;
                 red_button_press();
             }
