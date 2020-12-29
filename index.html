@@ -51,7 +51,9 @@
     let deactivation_timeout = null;
     const AUDIO_CONTEXT = new AudioContext;
     let oscillator = null;
-
+    let gamepads = {};
+    let gamepad_buttons = {};
+    
     function make_sound(frequency, duration_in_seconds) {
         oscillator = AUDIO_CONTEXT.createOscillator();
         oscillator.type = "sine";
@@ -118,6 +120,48 @@
         handle_button_press("yellow", 1100);
     };
     
+    window.addEventListener("gamepadconnected", function(event) {
+        console.log("Gamepad connected");
+        let gamepad = event.gamepad;
+        gamepads[gamepad.index] = gamepad;
+        
+        setInterval(function() {
+            if (gamepad.buttons[0].pressed && !gamepad_buttons[0]) {
+                gamepad_buttons[0] = true;
+                blue_button_press();
+            }
+            if (gamepad.buttons[1].pressed && !gamepad_buttons[1]) {
+                gamepad_buttons[1] = true;
+                yellow_button_press();
+            }
+            if (gamepad.buttons[2].pressed && !gamepad_buttons[2]) {
+                gamepad_buttons[2] = true;
+                green_button_press();
+            }
+            if (gamepad.buttons[3].pressed && !gamepad_buttons[3]) {
+                gamepad_buttons[3] = true;
+                red_button_press();
+            }
+            
+            if (!gamepad.buttons[0].pressed && gamepad_buttons[0]) {
+                gamepad_buttons[0] = false;
+            }
+            if (!gamepad.buttons[1].pressed && gamepad_buttons[1]) {
+                gamepad_buttons[1] = false;
+            }
+            if (!gamepad.buttons[2].pressed && gamepad_buttons[2]) {
+                gamepad_buttons[2] = false;
+            }
+            if (!gamepad.buttons[3].pressed && gamepad_buttons[3]) {
+                gamepad_buttons[3] = false;
+            }            
+        }, 100);
+    });
+    
+    window.addEventListener("gamepaddisconnected", function(event) {
+        console.log("Gamepad disconnected");
+        delete gamepads[event.gamepad.index];
+    });       
 </script>
 
 </html>
